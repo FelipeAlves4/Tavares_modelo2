@@ -1,7 +1,7 @@
-import { FormEvent, ReactNode, useId, useState } from 'react'
+import { FormEvent, ReactNode, useId, useRef, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { ArrowUpRight, Menu, X } from 'lucide-react'
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import { AnimatePresence, motion, useInView, useReducedMotion } from 'motion/react'
 
 type RevealProps = { children: ReactNode; className?: string }
 type ImageRevealProps = { src: string; alt: string; className?: string; width?: number; height?: number; priority?: boolean }
@@ -13,7 +13,11 @@ export function Reveal({ children, className = '' }: RevealProps) {
 
 export function ImageReveal({ src, alt, className = '', width = 1600, height = 1100, priority = false }: ImageRevealProps) {
   const reduce = useReducedMotion()
-  return <motion.div className={`image-reveal ${className}`} initial={reduce ? false : { clipPath: 'inset(0 0 100% 0)' }} whileInView={{ clipPath: 'inset(0 0 0% 0)' }} viewport={{ once: true, amount: .12 }} transition={{ duration: 1, ease: [0.76, 0, .24, 1] }}><img src={src} alt={alt} width={width} height={height} loading={priority ? 'eager' : 'lazy'} fetchPriority={priority ? 'high' : 'auto'} /></motion.div>
+  const wrapperRef = useRef<HTMLDivElement>(null)
+  const inView = useInView(wrapperRef, { once: true, amount: 0.08 })
+  const [loaded, setLoaded] = useState(false)
+  const revealed = reduce || inView || loaded
+  return <div ref={wrapperRef} className={`image-reveal ${className}`}><motion.div className="image-reveal-content" initial={reduce ? false : { clipPath: 'inset(0 0 100% 0)', opacity: 0 }} animate={revealed ? { clipPath: 'inset(0 0 0% 0)', opacity: 1 } : undefined} transition={{ duration: reduce ? 0 : 1, ease: [0.76, 0, .24, 1] }}><img src={src} alt={alt} width={width} height={height} loading={priority ? 'eager' : 'lazy'} fetchPriority={priority ? 'high' : 'auto'} onLoad={() => setLoaded(true)} /></motion.div></div>
 }
 
 export function Brand({ inverse = false }: { inverse?: boolean }) {
