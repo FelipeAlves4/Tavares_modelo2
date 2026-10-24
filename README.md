@@ -21,9 +21,15 @@ npm run build
 
 As revelações usam Motion for React e respeitam `prefers-reduced-motion`. O menu móvel, filtros, links, formulário com validação local e rota 404 estão implementados.
 
+## SEO e rotas
+
+`index.html` fornece metadados estáticos de fallback e `src/useRouteMeta.ts` atualiza título, descrição e metadados sociais durante a navegação em cada rota. Como esta é uma SPA Vite, rastreadores que não executam JavaScript verão apenas os metadados padrão; para SEO de produção, a recomendação é pré-renderizar as rotas públicas ou migrar a renderização para SSR.
+
+O arquivo `vercel.json` reescreve URLs para `index.html`, permitindo acesso direto às rotas internas e à página 404 do React Router na Vercel.
+
 ## Assets
 
-As logos fornecidas foram preservadas em `public/images/`. As fotos ilustrativas foram baixadas da [Unsplash](https://unsplash.com/license), sob a licença Unsplash, e seus nomes/URLs de origem estão registrados no histórico do terminal de implementação. Antes de produção, substitua todos os projetos demonstrativos e imagens ilustrativas por fotos licenciadas da Tavares, com créditos e permissões verificados.
+As logos fornecidas foram preservadas em `public/images/`. As fotos ilustrativas foram baixadas da [Unsplash](https://unsplash.com/license), sob a licença Unsplash. Os nomes e URLs de origem estão versionados em [ASSET_CREDITS.md](./ASSET_CREDITS.md). Antes de produção, substitua todos os projetos demonstrativos e imagens ilustrativas por fotos licenciadas da Tavares, com créditos e permissões verificados.
 
 ## Publicação na Vercel
 
